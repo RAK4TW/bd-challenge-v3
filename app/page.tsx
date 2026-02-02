@@ -1,5 +1,5 @@
 
-import * as Components from "./components";
+import * as Components from "./components/index";
 import { client } from "@/lib/shopify/serverClient";
 import { getShop, getAllProducts } from "@/lib/shopify/graphql/query";
 import { Product } from "./types/types";
