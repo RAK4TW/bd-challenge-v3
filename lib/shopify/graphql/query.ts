@@ -29,6 +29,8 @@ export const getAllProducts = `#graphql
           id
           title
           handle
+          productType
+          tags
           priceRange {
             minVariantPrice {
               amount

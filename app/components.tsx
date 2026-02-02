@@ -72,7 +72,7 @@ export const ProductCard = ({ product, onQuickView }: ProductCardProps) => {
 
   return (
     <div 
-      className="border border-gray-200 overflow-hidden cursor-pointer transition-transform duration-200 hover:-translate-y-1 flex flex-col h-full"
+      className="border-2 border-red-500 overflow-hidden cursor-pointer transition-transform duration-200 hover:-translate-y-1 flex flex-col h-full rounded-lg"
       onClick={(e) => onQuickView(product, e)}
     >
       {image && (
@@ -84,8 +84,8 @@ export const ProductCard = ({ product, onQuickView }: ProductCardProps) => {
       )}
       <div className="p-4 flex flex-col flex-1">
         <h3 className="font-semibold text-lg mb-2 text-gray-800 flex-grow">{product.title}</h3>
-        <p className="text-gray-600 mb-4">
-          {new Intl.NumberFormat(undefined, {
+        <p className="text-gray-600 mb-4 font-lato text-lg">
+          Price: {new Intl.NumberFormat(undefined, {
             style: "currency",
             currency: price.currencyCode,
           }).format(parseFloat(price.amount))}
@@ -95,7 +95,7 @@ export const ProductCard = ({ product, onQuickView }: ProductCardProps) => {
             e.stopPropagation();
             onQuickView(product, e);
           }}
-          className="bg-white border border-gray-300 text-gray-800 px-4 py-2 hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-colors mt-auto cursor-pointer"
+          className="bg-gradient-to-r from-purple-500 to-red-500 text-white hover:from-purple-600 hover:to-red-600 transform hover:scale-105 transition-all duration-200 px-4 py-2 mt-auto cursor-pointer"
         >
           Quick View
         </button>
@@ -155,8 +155,8 @@ export const VariantSelector = ({ product, selectedOptions, onOptionChange }: Va
         
         return (
           <div key={option.name}>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {option.name}
+            <label className="block text-sm font-medium text-gray-700 mb-2 font-lato">
+              {option.name}:
             </label>
             <div className="flex flex-wrap gap-2">
               {allValues.map((value) => {
@@ -168,7 +168,7 @@ export const VariantSelector = ({ product, selectedOptions, onOptionChange }: Va
                     key={value}
                     onClick={() => onOptionChange(option.name, value)}
                     disabled={!isAvailable}
-                    className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
+                    className={`cursor-pointer px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 font-lato ${
                       isSelected
                         ? 'bg-gray-800 text-white border-gray-800'
                         : isAvailable
@@ -309,10 +309,10 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
     
     setAddToBagState('success');
     
-    // Reset to idle after 1-2 seconds
+    // Close modal after showing success state briefly
     setTimeout(() => {
-      setAddToBagState('idle');
-    }, Math.random() * 1000 + 1000);
+      onClose();
+    }, 800);
   };
 
   const handleOptionChange = (optionName: string, value: string) => {
@@ -339,7 +339,7 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-gray-900/20 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={handleBackdropClick}
         >
           <motion.div
@@ -348,7 +348,7 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="bg-white border border-gray-200 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            className="bg-white border-2 border-red-500 max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-lg"
             onClick={(e) => e.stopPropagation()}
           >
         <div className="flex flex-col lg:flex-row ">
@@ -376,7 +376,7 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
               <button
                 ref={closeButtonRef}
                 onClick={onClose}
-                className="text-gray-500 hover:text-gray-700 text-2xl leading-none ml-4 cursor-pointer"
+                className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-700 text-2xl font-light transition-colors cursor-pointer"
               >
                 ×
               </button>
@@ -388,8 +388,8 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
               </div>
             ) : displayPrice && (
               <div className="mb-6">
-                <p className="text-2xl font-semibold text-gray-900">
-                  {new Intl.NumberFormat(undefined, {
+                <p className="text-gray-600 mb-6 font-lato text-lg">
+                  Price: {new Intl.NumberFormat(undefined, {
                     style: "currency",
                     currency: displayPrice.currencyCode,
                   }).format(parseFloat(displayPrice.amount))}
@@ -421,11 +421,11 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
                 disabled={!resolvedVariant || addToBagState !== 'idle'}
                 className={`w-full px-6 py-3 font-medium transition-all duration-200 mt-6 ${
                   addToBagState === 'adding'
-                    ? 'bg-blue-600 text-white border border-blue-600'
+                    ? 'bg-purple-600 text-white'
                     : addToBagState === 'success'
-                    ? 'bg-green-600 text-white border border-green-600'
-                    : 'bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white hover:border-gray-800'
-                } ${!resolvedVariant || addToBagState !== 'idle' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                    ? 'bg-red-600 text-white shadow-lg'
+                    : 'bg-gradient-to-r from-purple-500 to-red-500 text-white hover:from-purple-600 hover:to-red-600 transform hover:scale-105'
+                } ${!resolvedVariant || addToBagState !== 'idle' ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
               >
                 {addToBagState === 'idle' && 'Add to Bag'}
                 {addToBagState === 'adding' && 'Adding...'}
@@ -434,7 +434,7 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Added
+                    Added!
                   </span>
                 )}
               </button>
@@ -445,6 +445,195 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
         </motion.div>
       )}
     </AnimatePresence>
+  );
+};
+
+type ProductFilterProps = {
+  products: Product[];
+  onFilterChange: (filteredProducts: Product[]) => void;
+  onFilterCategoryChange?: (filterCategory: string) => void;
+};
+
+export const ProductFilter = ({ products, onFilterChange, onFilterCategoryChange }: ProductFilterProps) => {
+  const [selectedFilter, setSelectedFilter] = useState<string>('all');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Extract unique product types from product data
+  const getProductTypes = () => {
+    const types = new Set<string>();
+    types.add('all'); // Always include "all" option
+    
+    // Log sample products to understand the data structure
+    console.log('Sample products:', products.slice(0, 5));
+    
+    products.forEach(product => {
+      const title = product.title.toLowerCase();
+      const handle = product.handle.toLowerCase();
+      
+      // Check for specific categories mentioned
+      if (title.includes('shirt') || title.includes('top') || title.includes('tee') || title.includes('blouse') || 
+          title.includes('glove') || title.includes('mitts')) types.add('clothing');
+      
+      if (title.includes('graphics card') || title.includes('gpu') || title.includes('video card') || 
+          title.includes('rtx') || title.includes('radeon') || title.includes('nvidia') || title.includes('geforce')) types.add('graphics cards');
+      
+      if (title.includes('headset') || title.includes('headphones') || title.includes('earphones') || 
+          title.includes('keyboard') || title.includes('keypad') || title.includes('mouse') || title.includes('monitor')) types.add('computer accessories');
+      
+      // Also check product type tags if available
+      if (product.productType) {
+        const productType = product.productType.toLowerCase();
+        if (productType.includes('shirt') || productType.includes('top') || productType.includes('glove')) types.add('clothing');
+        if (productType.includes('graphics') || productType.includes('gpu') || productType.includes('video card')) types.add('graphics cards');
+        if (productType.includes('headset') || productType.includes('headphone') || productType.includes('keyboard') || productType.includes('computer')) types.add('computer accessories');
+      }
+      
+      // Check tags if available
+      if (product.tags) {
+        product.tags.forEach((tag: string) => {
+          const tagLower = tag.toLowerCase();
+          if (tagLower.includes('shirt') || tagLower.includes('top') || tagLower.includes('glove')) types.add('clothing');
+          if (tagLower.includes('graphics') || tagLower.includes('gpu') || tagLower.includes('rtx') || tagLower.includes('nvidia')) types.add('graphics cards');
+          if (tagLower.includes('headset') || tagLower.includes('headphone') || tagLower.includes('keyboard') || tagLower.includes('computer')) types.add('computer accessories');
+        });
+      }
+    });
+    
+    console.log('Detected types:', Array.from(types));
+    return Array.from(types);
+  };
+
+  const filterProducts = (filterType: string) => {
+    if (filterType === 'all') {
+      onFilterChange(products);
+      if (onFilterCategoryChange) onFilterCategoryChange('all');
+      return;
+    }
+
+    const filtered = products.filter(product => {
+      const title = product.title.toLowerCase();
+      const handle = product.handle.toLowerCase();
+      
+      switch (filterType) {
+        case 'clothing':
+          return title.includes('shirt') || title.includes('top') || title.includes('tee') || title.includes('blouse') ||
+                 title.includes('glove') || title.includes('mitts') ||
+                 (product.productType && (product.productType.toLowerCase().includes('shirt') || product.productType.toLowerCase().includes('glove'))) ||
+                 (product.tags && product.tags.some((tag: string) => tag.toLowerCase().includes('shirt') || tag.toLowerCase().includes('glove')));
+        case 'graphics cards':
+          return title.includes('graphics card') || title.includes('gpu') || title.includes('video card') ||
+                 title.includes('rtx') || title.includes('radeon') || title.includes('nvidia') || title.includes('geforce') ||
+                 (product.productType && product.productType.toLowerCase().includes('graphics')) ||
+                 (product.tags && product.tags.some((tag: string) => tag.toLowerCase().includes('graphics') || tag.toLowerCase().includes('gpu') || tag.toLowerCase().includes('rtx') || tag.toLowerCase().includes('nvidia')));
+        case 'computer accessories':
+          return title.includes('headset') || title.includes('headphones') || title.includes('earphones') ||
+                 title.includes('keyboard') || title.includes('keypad') || title.includes('mouse') || title.includes('monitor') ||
+                 title.includes('webcam') || title.includes('microphone') || title.includes('speaker') ||
+                 (product.productType && product.productType.toLowerCase().includes('computer')) ||
+                 (product.tags && product.tags.some((tag: string) => tag.toLowerCase().includes('headset') || tag.toLowerCase().includes('headphone') || tag.toLowerCase().includes('keyboard') || tag.toLowerCase().includes('computer')));
+        default:
+          return true;
+      }
+    });
+
+    console.log(`Filtered ${filterType}:`, filtered.length, 'products');
+    onFilterChange(filtered);
+    if (onFilterCategoryChange) onFilterCategoryChange(filterType);
+  };
+
+  const productTypes = getProductTypes();
+
+  return (
+    <div className="mb-8 relative" ref={dropdownRef}>
+      <div className="relative">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="bg-white border border-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-all duration-200 cursor-pointer flex items-center justify-between gap-2 w-full min-w-[250px] md:max-w-[200px]"
+        >
+          <span>{selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)}</span>
+          <svg 
+            className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} flex-shrink-0`}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        
+        {isOpen && (
+          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 rounded-lg z-10 w-full min-w-[200px] md:max-w-[200px]">
+            {getProductTypes().map((type) => (
+              <button
+                key={type}
+                onClick={() => {
+                  setSelectedFilter(type);
+                  filterProducts(type);
+                  setIsOpen(false);
+                }}
+                className={`w-full text-left px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg ${
+                  selectedFilter === type ? 'bg-gray-800 text-white' : 'text-gray-800'
+                }`}
+              >
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+type ProductFilterWrapperProps = {
+  products: Product[];
+  onFilterChange?: (filterCategory: string, filteredProducts: Product[]) => void;
+};
+
+export const ProductFilterWrapper = ({ products, onFilterChange }: ProductFilterWrapperProps) => {
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+  const [currentFilter, setCurrentFilter] = useState<string>('all');
+
+  const handleFilterChange = (filtered: Product[]) => {
+    setFilteredProducts(filtered);
+    if (onFilterChange) {
+      onFilterChange(currentFilter, filtered);
+    }
+  };
+
+  return (
+    <>
+      <ProductFilter 
+        products={products} 
+        onFilterChange={handleFilterChange}
+        onFilterCategoryChange={setCurrentFilter}
+      />
+      {filteredProducts.length > 0 ? (
+        <ProductGrid products={filteredProducts} />
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">No products found in this category.</p>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -1,8 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Josefin_Sans, Lato } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const josefinSans = Josefin_Sans({ 
+  subsets: ["latin"],
+  variable: "--font-josefin-sans",
+});
+
+const lato = Lato({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  variable: "--font-lato",
+});
 
 export const metadata: Metadata = {
   title: "Bryt Designs Frontend Challenge",
@@ -18,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} bg-white text-black dark:bg-black dark:text-white`}
+        className={`${josefinSans.className} bg-white text-black dark:bg-black dark:text-white`}
       >
         {children}
       </body>

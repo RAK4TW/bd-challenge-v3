@@ -2,6 +2,8 @@ export type Product = {
   id: string;
   title: string;
   handle: string;
+  productType?: string;
+  tags?: string[];
   priceRange: {
     minVariantPrice: {
       amount: string;
