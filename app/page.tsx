@@ -1,24 +1,15 @@
 import * as Components from "./components";
 import { client } from "@/lib/shopify/serverClient";
-import { getShop, getCollections, getCollectionProducts } from "@/lib/shopify/graphql/query";
+import { getShop, getAllProducts } from "@/lib/shopify/graphql/query";
 
 export default async function Home() {
   "use cache";
-  const [shopResp, collectionsResp] = await Promise.all([
+  const [shopResp, productsResp] = await Promise.all([
     client.request(getShop),
-    client.request(getCollections)
+    client.request(getAllProducts, { variables: { first: 250 } })
   ]);
 
-  const collections = collectionsResp.data?.collections?.edges?.map((edge: any) => edge.node) || [];
-  
-  let products = [];
-  if (collections.length > 0) {
-    const firstCollectionHandle = collections[0].handle;
-    const productsResp = await client.request(getCollectionProducts, { 
-      variables: { handle: firstCollectionHandle } 
-    });
-    products = productsResp.data?.collection?.products?.edges?.map((edge: any) => edge.node) || [];
-  }
+  const products = productsResp.data?.products?.edges?.map((edge: any) => edge.node) || [];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -41,14 +32,7 @@ export default async function Home() {
           <Components.ProductGrid products={products} />
         ) : (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg mb-4">No products found.</p>
-            {collections.length === 0 ? (
-              <p className="text-gray-400">No collections available in the store.</p>
-            ) : (
-              <p className="text-gray-400">
-                Available collections: {collections.map((c: any) => c.title).join(", ")}
-              </p>
-            )}
+            <p className="text-gray-500 text-lg">No products found in the store.</p>
           </div>
         )}
       </main>

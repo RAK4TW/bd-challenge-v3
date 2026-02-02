@@ -21,27 +21,25 @@ export const getCollections = `#graphql
   }
 ` as const;
 
-export const getCollectionProducts = `#graphql
-  query getCollectionProducts($handle: String!) {
-    collection(handle: $handle) {
-      products(first: 20) {
-        edges {
-          node {
-            id
-            title
-            handle
-            priceRange {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
+export const getAllProducts = `#graphql
+  query getAllProducts($first: Int!) {
+    products(first: $first) {
+      edges {
+        node {
+          id
+          title
+          handle
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
             }
-            images(first: 1) {
-              edges {
-                node {
-                  url
-                  altText
-                }
+          }
+          images(first: 1) {
+            edges {
+              node {
+                url
+                altText
               }
             }
           }

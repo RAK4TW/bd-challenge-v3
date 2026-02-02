@@ -95,7 +95,7 @@ export const ProductCard = ({ product, onQuickView }: ProductCardProps) => {
             e.stopPropagation();
             onQuickView(product, e);
           }}
-          className="bg-white border border-gray-300 text-gray-800 px-4 py-2 hover:bg-gray-50 transition-colors mt-auto cursor-pointer"
+          className="bg-white border border-gray-300 text-gray-800 px-4 py-2 hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-colors mt-auto cursor-pointer"
         >
           Quick View
         </button>
@@ -142,12 +142,8 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
       
-      // Focus management: move focus into the modal
-      if (closeButtonRef.current) {
-        closeButtonRef.current.focus();
-      }
+      if (closeButtonRef.current) closeButtonRef.current.focus();
       
-      // Trap focus within the modal
       const handleTabKey = (e: KeyboardEvent) => {
         if (e.key === 'Tab' && modalRef.current) {
           const focusableElements = modalRef.current.querySelectorAll(
@@ -188,9 +184,7 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
   }, [isOpen, onClose]);
 
   const handleBackdropClick = (event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
+    if (event.target === event.currentTarget) onClose();
   };
 
   const handleAddToBag = async () => {
@@ -198,19 +192,16 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
     
     setAddToBagState('adding');
     
-    // Simulate async add with 800-1200ms delay
-    const delay = Math.random() * 400 + 800; // 800-1200ms
+    const delay = Math.random() * 400 + 800; 
     await new Promise(resolve => setTimeout(resolve, delay));
     
     setAddToBagState('success');
     
-    // Reset to idle after 1-2 seconds
     setTimeout(() => {
       setAddToBagState('idle');
-    }, Math.random() * 1000 + 1000); // 1000-2000ms
+    }, Math.random() * 1000 + 1000);
   };
 
-  // Reset state when modal closes
   useEffect(() => {
     if (!isOpen) {
       setAddToBagState('idle');
@@ -236,19 +227,19 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            className="bg-white border border-gray-200 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-        <div className="flex flex-col lg:flex-row">
+        <div className="flex flex-col lg:flex-row ">
           {/* Media Column */}
           <div className="lg:w-1/2 lg:max-h-[90vh]">
             {isLoading ? (
-              <div className="w-full h-64 lg:h-full bg-gray-200 animate-pulse lg:rounded-l-lg"></div>
+              <div className="w-full h-64 lg:h-full bg-gray-200 animate-pulse"></div>
             ) : image ? (
               <img
                 src={image.url}
                 alt={image.altText || product.title}
-                className="w-full h-64 lg:h-full object-cover lg:rounded-l-lg"
+                className="w-full h-64 lg:h-full object-cover"
               />
             ) : null}
           </div>
@@ -264,7 +255,7 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
               <button
                 ref={closeButtonRef}
                 onClick={onClose}
-                className="text-gray-500 hover:text-gray-700 text-2xl leading-none ml-4"
+                className="text-gray-500 hover:text-gray-700 text-2xl leading-none ml-4 cursor-pointer"
               >
                 ×
               </button>
@@ -303,13 +294,13 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
               <button
                 onClick={handleAddToBag}
                 disabled={addToBagState !== 'idle'}
-                className={`w-full px-6 py-3 rounded-lg font-medium transition-all duration-200 mt-6 ${
+                className={`w-full px-6 py-3 font-medium transition-all duration-200 mt-6 ${
                   addToBagState === 'adding'
                     ? 'bg-blue-600 text-white border border-blue-600'
                     : addToBagState === 'success'
                     ? 'bg-green-600 text-white border border-green-600'
-                    : 'bg-blue-600 text-white border border-blue-600 hover:bg-blue-700'
-                } ${addToBagState !== 'idle' ? 'cursor-not-allowed' : ''}`}
+                    : 'bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white hover:border-gray-800'
+                } ${addToBagState !== 'idle' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 {addToBagState === 'idle' && 'Add to Bag'}
                 {addToBagState === 'adding' && 'Adding...'}
