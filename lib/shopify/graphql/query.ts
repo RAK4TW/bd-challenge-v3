@@ -43,6 +43,31 @@ export const getAllProducts = `#graphql
               }
             }
           }
+          variants(first: 50) {
+            edges {
+              node {
+                id
+                title
+                price {
+                  amount
+                  currencyCode
+                }
+                selectedOptions {
+                  name
+                  value
+                }
+                image {
+                  url
+                  altText
+                }
+                availableForSale
+              }
+            }
+          }
+          options {
+            name
+            values
+          }
         }
       }
     }

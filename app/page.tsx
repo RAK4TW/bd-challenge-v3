@@ -1,6 +1,7 @@
 import * as Components from "./components";
 import { client } from "@/lib/shopify/serverClient";
 import { getShop, getAllProducts } from "@/lib/shopify/graphql/query";
+import { Product } from "./types/types";
 
 export default async function Home() {
   "use cache";
@@ -9,7 +10,7 @@ export default async function Home() {
     client.request(getAllProducts, { variables: { first: 250 } })
   ]);
 
-  const products = productsResp.data?.products?.edges?.map((edge: any) => edge.node) || [];
+  const products = productsResp.data?.products?.edges?.map((edge: { node: Product; }) => edge.node) || [];
 
   return (
     <div className="min-h-screen bg-gray-50">

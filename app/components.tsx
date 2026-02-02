@@ -104,6 +104,90 @@ export const ProductCard = ({ product, onQuickView }: ProductCardProps) => {
   );
 };
 
+type VariantSelectorProps = {
+  product: Product;
+  selectedOptions: Record<string, string>;
+  onOptionChange: (optionName: string, value: string) => void;
+};
+
+export const VariantSelector = ({ product, selectedOptions, onOptionChange }: VariantSelectorProps) => {
+  const getAvailableOptions = (optionName: string, currentValue?: string) => {
+    const availableValues = new Set<string>();
+    
+    product.variants.edges.forEach(({ node: variant }) => {
+      if (!variant.availableForSale) return;
+      
+      const isCompatible = Object.entries(selectedOptions).every(([name, value]) => 
+        name === optionName || value === '' || variant.selectedOptions.some(opt => opt.name === name && opt.value === value)
+      );
+      
+      if (isCompatible) {
+        const option = variant.selectedOptions.find(opt => opt.name === optionName);
+        if (option) {
+          availableValues.add(option.value);
+        }
+      }
+    });
+    
+    return Array.from(availableValues);
+  };
+
+  // Check if product has standard size options only
+  const hasSizeOptions = product.options.some(option => {
+    const optionName = option.name.toLowerCase();
+    if (!optionName.includes('size')) return false;
+    
+    // Only allow standard size values
+    const standardSizes = /^(xs|s|m|l|xl|xxl|2xl|3xl)$/i;
+    return option.values.every(value => standardSizes.test(value.trim()));
+  });
+
+  // Don't show variant selector if no standard size options detected
+  if (!hasSizeOptions) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-4">
+      {product.options.map((option) => {
+        const availableValues = getAvailableOptions(option.name, selectedOptions[option.name]);
+        const allValues = option.values;
+        
+        return (
+          <div key={option.name}>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {option.name}
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {allValues.map((value) => {
+                const isAvailable = availableValues.includes(value);
+                const isSelected = selectedOptions[option.name] === value;
+                
+                return (
+                  <button
+                    key={value}
+                    onClick={() => onOptionChange(option.name, value)}
+                    disabled={!isAvailable}
+                    className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
+                      isSelected
+                        ? 'bg-gray-800 text-white border-gray-800'
+                        : isAvailable
+                        ? 'bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white hover:border-gray-800'
+                        : 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    {value}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 type QuickViewModalProps = {
   product: Product | null;
   isOpen: boolean;
@@ -127,9 +211,38 @@ const LoadingSkeleton = () => (
 export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: QuickViewModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
   const [addToBagState, setAddToBagState] = useState<'idle' | 'adding' | 'success'>('idle');
   const image = product?.images.edges[0]?.node;
   const price = product?.priceRange.minVariantPrice;
+
+  // Get resolved variant based on selected options
+  const getResolvedVariant = () => {
+    if (!product) return null;
+    
+    // Check if product has standard size options only
+    const hasSizeOptions = product.options.some(option => {
+      const optionName = option.name.toLowerCase();
+      if (!optionName.includes('size')) return false;
+      
+      const standardSizes = /^(xs|s|m|l|xl|xxl|2xl|3xl)$/i;
+      return option.values.every(value => standardSizes.test(value.trim()));
+    });
+    
+    if (!hasSizeOptions) {
+      return product.variants.edges.find(({ node: variant }) => variant.availableForSale)?.node || null;
+    }
+    
+    return product.variants.edges.find(({ node: variant }) => {
+      return variant.selectedOptions.every(option => 
+        selectedOptions[option.name] === option.value
+      );
+    })?.node || null;
+  };
+
+  const resolvedVariant = getResolvedVariant();
+  const displayPrice = resolvedVariant?.price || price;
+  const displayImage = resolvedVariant?.image || image;
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -188,22 +301,30 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
   };
 
   const handleAddToBag = async () => {
-    if (addToBagState !== 'idle') return;
+    if (!resolvedVariant || addToBagState !== 'idle') return;
     
     setAddToBagState('adding');
-    
     const delay = Math.random() * 400 + 800; 
     await new Promise(resolve => setTimeout(resolve, delay));
     
     setAddToBagState('success');
     
+    // Reset to idle after 1-2 seconds
     setTimeout(() => {
       setAddToBagState('idle');
     }, Math.random() * 1000 + 1000);
   };
 
+  const handleOptionChange = (optionName: string, value: string) => {
+    setSelectedOptions(prev => ({
+      ...prev,
+      [optionName]: value
+    }));
+  };
+
   useEffect(() => {
     if (!isOpen) {
+      setSelectedOptions({});
       setAddToBagState('idle');
     }
   }, [isOpen]);
@@ -235,10 +356,10 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
           <div className="lg:w-1/2 lg:max-h-[90vh]">
             {isLoading ? (
               <div className="w-full h-64 lg:h-full bg-gray-200 animate-pulse"></div>
-            ) : image ? (
+            ) : displayImage ? (
               <img
-                src={image.url}
-                alt={image.altText || product.title}
+                src={displayImage.url}
+                alt={displayImage.altText || product.title}
                 className="w-full h-64 lg:h-full object-cover"
               />
             ) : null}
@@ -265,13 +386,13 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
               <div className="mb-6">
                 <div className="h-8 bg-gray-200 rounded w-1/3 animate-pulse"></div>
               </div>
-            ) : price && (
+            ) : displayPrice && (
               <div className="mb-6">
                 <p className="text-2xl font-semibold text-gray-900">
                   {new Intl.NumberFormat(undefined, {
                     style: "currency",
-                    currency: price.currencyCode,
-                  }).format(parseFloat(price.amount))}
+                    currency: displayPrice.currencyCode,
+                  }).format(parseFloat(displayPrice.amount))}
                 </p>
               </div>
             )}
@@ -281,9 +402,13 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
                 <LoadingSkeleton />
               ) : (
                 <div className="space-y-4">
-                 
-                  
-          
+                  {product.options && product.options.length > 0 && (
+                    <VariantSelector
+                      product={product}
+                      selectedOptions={selectedOptions}
+                      onOptionChange={handleOptionChange}
+                    />
+                  )}
                 </div>
               )}
             </div>
@@ -293,14 +418,14 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
             ) : (
               <button
                 onClick={handleAddToBag}
-                disabled={addToBagState !== 'idle'}
+                disabled={!resolvedVariant || addToBagState !== 'idle'}
                 className={`w-full px-6 py-3 font-medium transition-all duration-200 mt-6 ${
                   addToBagState === 'adding'
                     ? 'bg-blue-600 text-white border border-blue-600'
                     : addToBagState === 'success'
                     ? 'bg-green-600 text-white border border-green-600'
                     : 'bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white hover:border-gray-800'
-                } ${addToBagState !== 'idle' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                } ${!resolvedVariant || addToBagState !== 'idle' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 {addToBagState === 'idle' && 'Add to Bag'}
                 {addToBagState === 'adding' && 'Adding...'}
