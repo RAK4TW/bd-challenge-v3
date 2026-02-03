@@ -109,9 +109,9 @@ export const ProductFilter = ({ products, onFilterChange, onFilterCategoryChange
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-label="Product category filter"
-          className="bg-white text-gray-800 border-2 border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-black hover:border-gray-800 transition-all duration-200 cursor-pointer flex items-center justify-between gap-2 w-full min-w-[250px] md:max-w-[200px] translate-y-0.5"
+          className="bg-white text-gray-800 border-2 border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-all duration-200 cursor-pointer flex items-center justify-between gap-2 w-full min-w-[250px] md:max-w-[200px] translate-y-0.5"
         >
-          <span className="translate-y-0.5">{selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)}</span>
+          <span className="translate-y-0.5">{selectedFilter.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</span>
           <svg 
             className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} flex-shrink-0`}
             fill="none" 
@@ -141,11 +141,11 @@ export const ProductFilter = ({ products, onFilterChange, onFilterCategoryChange
                 tabIndex={-1}
                 onClick={() => handleOptionSelect(type)}
                 onKeyDown={(e) => handleOptionKeyDown(e, type, index)}
-                className={`w-full text-left px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`hover:text-black w-full text-left px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   selectedFilter === type ? 'bg-gray-800 text-white' : 'text-gray-800'
                 }`}
               >
-                {type.charAt(0).toUpperCase() + type.slice(1)}
+                {type.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
               </button>
             ))}
           </div>
