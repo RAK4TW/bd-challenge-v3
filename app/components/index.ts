@@ -6,6 +6,3 @@ export { ProductFilterWrapper } from './ProductFilterWrapper';
 export { VariantSelector } from './VariantSelector';
 export { QuickViewModal } from './QuickViewModal';
 export { LoadingSkeleton } from './LoadingSkeleton';
-
-// Form Components
-export { NameInputRoot, NameInput, NameDisplay } from './NameInput';
