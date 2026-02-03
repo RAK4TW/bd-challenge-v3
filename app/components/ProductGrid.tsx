@@ -1,13 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { type Product } from "@/app/types/types";
+import { type Product, type ProductGridProps } from "@/app/types/types";
 import { ProductCard } from "./ProductCard";
 import { QuickViewModal } from "./QuickViewModal";
-
-type ProductGridProps = {
-  products: Product[];
-};
 
 export const ProductGrid = ({ products }: ProductGridProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -16,7 +12,6 @@ export const ProductGrid = ({ products }: ProductGridProps) => {
   const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
 
   const handleQuickView = async (product: Product, event: React.MouseEvent) => {
-    // Store the triggering element for focus restoration
     setTriggerElement(event.currentTarget as HTMLElement);
     setSelectedProduct(product);
     setIsModalOpen(true);
@@ -33,10 +28,8 @@ export const ProductGrid = ({ products }: ProductGridProps) => {
     setSelectedProduct(null);
     setIsLoading(false);
     
-    // Restore focus to the triggering element
-    if (triggerElement) {
-      triggerElement.focus();
-    }
+    if (triggerElement) triggerElement.focus();
+    
   };
 
   return (

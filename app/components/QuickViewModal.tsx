@@ -127,11 +127,9 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
     }
   }, [isOpen]);
 
-  if (!isOpen || !product) return null;
-
   return (
     <AnimatePresence>
-      {isOpen && product && (
+      {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -147,15 +145,16 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
           >
             x
           </button>
-          <motion.div
-            ref={modalRef}
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="bg-white border-2 border-red-500 max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
+          {product && (
+            <motion.div
+              ref={modalRef}
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="bg-white border-2 border-red-500 max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
         <div className="flex flex-col lg:flex-row ">
           {/* Media Column */}
           <div className="lg:w-1/2 lg:max-h-[90vh]">
@@ -246,7 +245,8 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
             )}
           </div>
         </div>
-          </motion.div>
+            </motion.div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

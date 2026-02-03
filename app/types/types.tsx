@@ -44,3 +44,23 @@ export type Product = {
     values: string[];
   }[];
 };
+
+export type ProductCardProps = {
+  product: Product;
+  onQuickView: (product: Product, event: React.MouseEvent) => void;
+};
+
+export type ProductGridProps = {
+  products: Product[];
+};
+
+export type ProductFilterProps = {
+  products: Product[];
+  onFilterChange: (filteredProducts: Product[]) => void;
+  onFilterCategoryChange?: (filterCategory: string) => void;
+};
+
+export type ProductFilterWrapperProps = {
+  products: Product[];
+  onFilterChange?: (filterCategory: string, filteredProducts: Product[]) => void;
+};

@@ -1,14 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { type Product } from "@/app/types/types";
+import { type Product, type ProductFilterWrapperProps } from "@/app/types/types";
 import { ProductFilter } from "./ProductFilter";
 import { ProductGrid } from "./ProductGrid";
-
-type ProductFilterWrapperProps = {
-  products: Product[];
-  onFilterChange?: (filterCategory: string, filteredProducts: Product[]) => void;
-};
 
 export const ProductFilterWrapper = ({ products, onFilterChange }: ProductFilterWrapperProps) => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
@@ -16,9 +11,7 @@ export const ProductFilterWrapper = ({ products, onFilterChange }: ProductFilter
 
   const handleFilterChange = (filtered: Product[]) => {
     setFilteredProducts(filtered);
-    if (onFilterChange) {
-      onFilterChange(currentFilter, filtered);
-    }
+    if (onFilterChange) onFilterChange(currentFilter, filtered);
   };
 
   return (

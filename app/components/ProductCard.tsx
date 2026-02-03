@@ -1,9 +1,4 @@
-import { type Product } from "@/app/types/types";
-
-type ProductCardProps = {
-  product: Product;
-  onQuickView: (product: Product, event: React.MouseEvent) => void;
-};
+import { type Product, type ProductCardProps } from "@/app/types/types";
 
 export const ProductCard = ({ product, onQuickView }: ProductCardProps) => {
   const image = product.images.edges[0]?.node;
