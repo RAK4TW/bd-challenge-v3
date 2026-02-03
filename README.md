@@ -8,4 +8,4 @@
 
 # What I'd do more next time
 
-- I'd like to add more from the nice to have list, and add hypothetical descriptions to the products (placeholder text).
+- I'd like to add more from the nice to have list.
