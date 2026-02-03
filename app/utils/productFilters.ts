@@ -3,7 +3,12 @@ import { type Product } from "@/app/types/types";
 export const getProductTypes = (products: Product[]) => {
   const types = new Set<string>();
   types.add('all'); // Always include "all" option
+<<<<<<< HEAD
 
+=======
+  
+  
+>>>>>>> progress
   products.forEach(product => {
     const title = product.title.toLowerCase();
     const handle = product.handle.toLowerCase();

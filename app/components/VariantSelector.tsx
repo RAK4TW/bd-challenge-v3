@@ -68,7 +68,7 @@ export const VariantSelector = ({ product, selectedOptions, onOptionChange }: Va
                       isSelected
                         ? 'bg-gray-800 text-white border-gray-800 dark:bg-white dark:text-gray-800 dark:border-white'
                         : isAvailable
-                        ? 'bg-white border border-gray-300 text-gray-800 hover:bg-gray-800 hover:text-white hover:border-gray-800 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-white dark:hover:text-gray-800 dark:hover:border-white'
+                        ? 'bg-white border-2 border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white hover:border-gray-800 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-white dark:hover:text-gray-800 dark:hover:border-gray-800'
                         : 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-500'
                     }`}
                   >
