@@ -31,13 +31,14 @@ export const getAllProducts = `#graphql
           handle
           productType
           tags
+          descriptionHtml
           priceRange {
             minVariantPrice {
               amount
               currencyCode
             }
           }
-          images(first: 1) {
+          images(first: 10) {
             edges {
               node {
                 url

@@ -4,6 +4,7 @@ export type Product = {
   handle: string;
   productType?: string;
   tags?: string[];
+  descriptionHtml?: string;
   priceRange: {
     minVariantPrice: {
       amount: string;

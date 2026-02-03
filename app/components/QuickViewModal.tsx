@@ -183,6 +183,19 @@ export const QuickViewModal = ({ product, isOpen, onClose, isLoading = false }: 
               )}
             </div>
             
+            {product.descriptionHtml && (
+              <div className="mb-4">
+                {isLoading ? (
+                  <div className="h-16 bg-gray-200 rounded animate-pulse"></div>
+                ) : (
+                  <div 
+                    className="text-gray-600 prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+                  />
+                )}
+              </div>
+            )}
+            
             <div className="border-t border-gray-200 pt-2 mb-2"></div>
             
             {isLoading ? (

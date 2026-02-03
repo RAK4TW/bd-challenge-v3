@@ -109,7 +109,7 @@ export const ProductFilter = ({ products, onFilterChange, onFilterCategoryChange
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-label="Product category filter"
-          className="bg-white text-gray-800 border-2 border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-all duration-200 cursor-pointer flex items-center justify-between gap-2 w-full min-w-[250px] md:max-w-[200px] translate-y-0.5"
+          className="bg-white text-gray-800 border-2 border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-800 hover:text-black hover:border-gray-800 transition-all duration-200 cursor-pointer flex items-center justify-between gap-2 w-full min-w-[250px] md:max-w-[200px] translate-y-0.5"
         >
           <span className="translate-y-0.5">{selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)}</span>
           <svg 
