@@ -4,8 +4,6 @@ export const getProductTypes = (products: Product[]) => {
   const types = new Set<string>();
   types.add('all'); // Always include "all" option
   
-  // Log sample products to understand the data structure
-  console.log('Sample products:', products.slice(0, 5));
   
   products.forEach(product => {
     const title = product.title.toLowerCase();
@@ -41,7 +39,6 @@ export const getProductTypes = (products: Product[]) => {
     }
   });
   
-  console.log('Detected types:', Array.from(types));
   return Array.from(types);
 };
 
@@ -76,6 +73,5 @@ export const filterProducts = (products: Product[], filterType: string) => {
     }
   });
 
-  console.log(`Filtered ${filterType}:`, filtered.length, 'products');
   return filtered;
 };
